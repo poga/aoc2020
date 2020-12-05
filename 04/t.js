@@ -35,6 +35,8 @@ function p2(data) {
     if (!p1valid(data[i])) continue
 
     let cols = _parse(data[i])
+    if (!p2valid(cols)) continue
+    ret++
   }
 
   return ret
@@ -43,12 +45,40 @@ function p2(data) {
 // TODO
 function p2valid(cols) {
   for (let j=0; j<cols.length; j++) {
+    let val = cols[j][1]
     switch(cols[j][0]) {
       case "byr":
-        let val = +cols[j][1]
-        if (val <1920 || val > 2002) return false
+        if (val.length !== 4) return false
+        if (+val <1920 || +val > 2002) return false
         break;
-
+      case "iyr":
+        if (val.length !== 4) return false
+        if (+val <2010 || +val > 2020) return false
+        break;
+      case "eyr":
+        if (val.length !== 4) return false
+        if (+val <2020 || +val > 2030) return false
+        break;
+      case "hgt":
+        if (val.endsWith('cm')) {
+          val = val.substring(0, val.length - 2)
+          if (+val < 150 || +val > 193) return false
+        } else if (val.endsWith('in')) {
+          val = val.substring(0, val.length - 2)
+          if (+val < 59 || +val > 76) return false
+        } else {
+          return false
+        }
+        break
+      case "pid":
+        if (!val.match(/^[0-9]{9}$/)) return false
+        break
+      case "hcl":
+        if (!val.match(/^#[0-9a-f]{6}$/)) return false
+        break
+      case "ecl":
+        if (!["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].includes(val)) return false
+        break
     }
   }
   return true
