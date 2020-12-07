@@ -5,7 +5,7 @@ let regex = /(.+) bags contain (.+)/
 let colors = {}
 
 function main (data) {
-  //p1(data)
+  p1(data)
   p2(data)
 }
 
@@ -31,7 +31,6 @@ function p2 (data) {
 }
 
 function f (graph, color) {
-  p(color, graph[color])
   return graph[color].reduce((sum, next_color_pair) => {
     let [count, next_color] = next_color_pair
     return sum + count * (f(graph, next_color) + 1)
