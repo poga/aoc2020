@@ -28,6 +28,7 @@ function p1(ts, ids) {
 }
 
 function p2(ids) {
+  // prepare for sieving, sort by desc
   let buses = ids
     .map((x, i) => [x, i])
     .filter((x) => x[0] !== "x")
@@ -47,7 +48,8 @@ function p2(ids) {
         found = false;
         break;
       }
-      //p("matched", t, "with busID", id, "at offset", offset, "=", t + offset);
+      p("matched", t, "with busID", id, "at offset", offset, "=", t + offset);
+      p("step", step);
       step = Math.max(step, step * id);
     }
 
