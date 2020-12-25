@@ -31,8 +31,6 @@
     ([x y z] coord)
     [(- x 1) y (+ z 1)]))
 
-(def tiles @{})
-
 (def move
   '{
     :main (* (some :moves) -1)
@@ -48,7 +46,7 @@
     "ne" ne
     "nw" nw})
 
-(def input (string/split "\n" (string/trim(slurp "input.txt"))))
+(def tiles @{})
 
 (defn flip [coord]
   (if (nil? (tiles coord))
@@ -60,27 +58,41 @@
 (defn go (line)
     (->>
       (peg/match move line)
-      (reduce (fn [coord m] ((fs m) coord)) [0 0 0])
-      (pp)
+      (reduce (fn [coord m] ((fs m) coord)) init)
       ))
 
-(go "esenee")
-(go "esew")
+# (go "esenee")
+# (go "esew")
+#
+# (go "nwwswee")
 
-(go "nwwswee")
+(defn p1 [args]
+  (do
+    (def input (string/split "\n" (string/trim (slurp (get args 1)))))
+    (map
+      (fn [line]
+        (->>
+          (peg/match move line)
+          (reduce (fn [coord m] ((fs m) coord)) init)
+          (flip)
+          ))
+      input)
+    (pp (length tiles))
+    )
+  )
 
-(map
-  (fn [line]
-    (->>
-      (peg/match move line)
-      (reduce (fn [coord m] ((fs m) coord)) [0 0 0])
-      (flip)
-      (pp)
-      ))
-  input)
+(defn neighbor [coord]
+  (map |($ coord) (values fs))
+  )
 
-(pp (length tiles))
+(defn neighbor-1s [coord]
+  (->>
+    (map |(tiles $) (neighbors coord))
+    (filter |(not (nil? $)))
+    (length)
+    )
+  )
 
-(pp tiles)
-
-(pp input)
+(defn main [& args]
+  (p1 args)
+  )
